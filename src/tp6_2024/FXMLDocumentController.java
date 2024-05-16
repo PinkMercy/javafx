@@ -5,6 +5,7 @@
  */
 package tp6_2024;
 
+import DAO.DAOUser;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,7 +33,10 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private Button btn_login;
-
+    
+    @FXML
+    private Button btn_signup;
+    
     @FXML
     private AnchorPane pane_login;
 
@@ -78,13 +82,13 @@ public class FXMLDocumentController implements Initializable {
         try {
             pst = conn.prepareStatement(sql);
             pst.setString(1, txt_Ph_email.getText());
-            pst.setString(2, txt_password.getText());
+            pst.setString(2, DAOUser.hashPassword(txt_password.getText()));
             rs = pst.executeQuery();
             if (rs.next()) {
                 JOptionPane.showMessageDialog(null, "Email and password is corect");
 
                 btn_login.getScene().getWindow().hide();
-                Parent root = FXMLLoader.load(getClass().getResource("CPanel.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/TableView/TableView.fxml"));
                 Stage mainStage = new Stage();
                 Scene scene = new Scene(root);
                 mainStage.setScene(scene);
@@ -106,24 +110,25 @@ public class FXMLDocumentController implements Initializable {
             pst = conn.prepareStatement(sql);
             pst.setString(1, txt_Ph_nom_up.getText());
             pst.setString(3, txt_Ph_email_up.getText());
-            pst.setString(2, txt_Ph_number_up.getText());
-            pst.setString(4, txt_password_up.getText());
+            pst.setString(4, txt_Ph_number_up.getText());
+            pst.setString(2, DAOUser.hashPassword(txt_password_up.getText()));
             pst.execute();
 
             JOptionPane.showMessageDialog(null, "saved");
+            btn_signup.getScene().getWindow().hide();
+            Parent root = FXMLLoader.load(getClass().getResource("/TableView/TableView.fxml"));
+            Stage mainStage = new Stage();
+            Scene scene = new Scene(root);
+            mainStage.setScene(scene);
+            mainStage.show();
         } catch (Exception e) {
-             JOptionPane.showMessageDialog(null,e);
+            JOptionPane.showMessageDialog(null, e);
         }
     }
-        @Override
-        public void initialize
-        (URL url, ResourceBundle rb
-        
-        
-    
 
-) {
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
-    
+    }
+
 }
